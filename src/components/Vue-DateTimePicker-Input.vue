@@ -1,10 +1,10 @@
 <template>
   <div class="hello">
-    <p>Input: {{ dateInput }}</p>
-    <p>Error: {{ errorMessage }}</p>
-    <p>Success: {{ dateSuccess }}</p>
-
+    <p>
+      <small class="date-time-error-message"> {{ errorMessage }}</small>
+    </p>
     <imask-input
+      class="date-time-input"
       v-model="dateInput"
       mask="**-**-**** **:**"
       :lazy="false"
@@ -42,23 +42,23 @@ export default {
         let year = yearTime.split(" ")[0];
         const errors = [
           {
-            message: "Day input must be between 01 and 31.",
+            message: "Invalid day input.",
             query: day.length === 2 && day <= 31 && day > 0,
           },
           {
-            message: "Month input must be between 01 and 12.",
+            message: "Invalid minute input.",
             query: month.length === 2 && month <= 12 && month > 0,
           },
           {
-            message: "The year were you inputted wrong. (2022 - 2100)",
+            message: "Invalid year input.",
             query: year.length === 4 && year <= 2100 && year > 2022,
           },
           {
-            message: "Hour input must be between 01 and 23.",
+            message: "Invalid hour format (00-23)",
             query: thisHour.length === 2 && thisHour >= 0 && thisHour < 24,
           },
           {
-            message: "Minute input must be between 00 and 59.",
+            message: "Invalid minute.",
             query:
               splittedTime[1].length === 2 &&
               splittedTime[1] <= 59 &&
@@ -80,8 +80,15 @@ export default {
         }
       } catch (err) {
         console.log(err);
-        this[errorDataModel] = "Girdiğiniz tarih formatı hatalı";
+        this[errorDataModel] = "Invalid date format.";
       }
+    },
+  },
+  props: {
+    hourFormat: {
+      type: Number,
+      default: 24,
+      required: false,
     },
   },
   watch: {
@@ -97,4 +104,19 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.date-time-error-message {
+  color: red;
+  margin-left: 5px;
+}
+.date-time-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(229, 229, 229);
+  text-indent: 10px;
+}
+.date-time-input:focus {
+  outline: none;
+  border: 1px solid rgb(175, 175, 175);
+}
+</style>
